@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".signup">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary">
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="30dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_arrow_back"
+            />
+
+        <TextView
+            android:id="@+id/header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Register"
+            android:textSize="28dp"
+            android:layout_marginLeft="30dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <EditText
+            android:id="@+id/username"
+            android:inputType="text"
+            android:hint="Enter your Name"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            />
+        <EditText
+            android:id="@+id/phone"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:hint="Enter Your phone Number"
+            android:inputType="phone"/>
+        <EditText
+            android:id = "@+id/Email"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:hint="Enter your E-Mail"
+            android:inputType="text"/>
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:hint="Enter your Password"
+            android:inputType="textPassword"
+            />
+
+        <info.hoang8f.widget.FButton
+            android:id="@+id/register"
+            android:text="Sign Up"
+            android:textColor="#FFFFFF"
+            android:layout_weight="1"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:shadowColor="#000000"
+            app:fButtonColor="@color/fbutton_color_green_sea"
+            app:shadowEnabled="true"
+            app:shadowHeight="5dp"
+            app:cornerRadius="10dp"
+            />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Already Register? "/>
+            <TextView
+                android:id="@+id/signin_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" Login here"
+                android:textColor="@color/colorPrimary"/>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:textColor="#FF0000"
+            />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

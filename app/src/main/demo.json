@@ -1,14 +1,292 @@
 {
-  "User": {
-    "7289005029": {
-      "Name": "Manish Patel",
-      "email": "manishpatel6314@gmail.com",
-      "password": "7289005029"
+  "Category" : {
+    "01" : {
+      "image" : "http://medifoods.my/images/menu/feature_snacks.jpg",
+      "name" : "Snacks"
     },
-    "9990502821": {
-      "Name": "Pawan",
-      "email": "pawan2611@gmail.com",
-      "password": "9990507821"
+    "02" : {
+      "image" : "http://medifoods.my/images/menu/feature_westernsoup.jpg",
+      "name" : "Soups"
+    },
+    "03" : {
+      "image" : "http://medifoods.my/images/menu/feature_sandwich.jpg",
+      "name" : "Sandwich"
+    },
+    "04" : {
+      "image" : "http://medifoods.my/images/menu/feature_pizza.jpg",
+      "name" : "Pizza"
+    },
+    "05" : {
+      "image" : "http://medifoods.my/images/menu/feature_pasta.jpg",
+      "name" : "Pastas"
+    }
+  },
+  "Food" : {
+    "01" : {
+      "description" : "this is pao made with rice and ginger.",
+      "discount" : "0",
+      "image" : "http://medifoods.my/images/menu/p1_ginger_pao.jpg",
+      "menuid" : "01",
+      "name" : "Ginger Pao",
+      "price" : "200"
+    },
+    "02" : {
+      "description" : "this is pao made with rice and coconut.",
+      "discount" : "0",
+      "image" : "http://medifoods.my/images/menu/p2_coconut_pao.jpg",
+      "menuid" : "01",
+      "name" : "Coconut pao",
+      "price" : "200"
+    },
+    "03" : {
+      "description" : "this is pao made with rice and redbean.",
+      "discount" : "0",
+      "image" : "http://medifoods.my/images/menu/p3_red_bean_pao.jpg",
+      "menuid" : "01",
+      "name" : "Red Bean Pao",
+      "price" : "200"
+    },
+    "04" : {
+      "description" : "Flavourful blend of 3 types of mushrooms, onion and herbs",
+      "discount" : "0",
+      "image" : "http://medifoods.my/images/menu/s3_mushroom_soup_western_soup.jpg",
+      "menuid" : "02",
+      "name" : "CREAM OF MUSHROOM",
+      "price" : "200"
+    },
+    "05" : {
+      "description" : "Delicious blend of pumpkin, carrot and onion",
+      "discount" : "0",
+      "image" : "http://medifoods.my/images/menu/s4_pumpkin_soup_western_soup.jpg",
+      "menuid" : "02",
+      "name" : "CREAM OF PUMPKIN",
+      "price" : "200"
+    },
+    "06" : {
+      "description" : "2 organic eggs with only 1 yolk served with fresh organic vegetables and low fat mayonnaise on panini bread",
+      "discount" : "0",
+      "image" : "http://medifoods.my/images/menu/22_egg_mayo.jpg",
+      "menuid" : "03",
+      "name" : "EGG MAYO SANDWICH",
+      "price" : "200"
+    },
+    "07" : {
+      "description" : "A patty made of organic mushrooms, lentils and spices, topped with an organic sunny side up egg",
+      "discount" : "0",
+      "image" : "http://medifoods.my/images/menu/24_lentil_burger.jpg",
+      "menuid" : "03",
+      "name" : "LENTIL SANDWICH",
+      "price" : "200"
+    },
+    "08" : {
+      "description" : "Mushrooms and onion",
+      "discount" : "0",
+      "image" : "http://medifoods.my/images/menu/21_mushroom_pizza.jpg",
+      "menuid" : "04",
+      "name" : "MUSHROOM PIZZA",
+      "price" : "600"
+    },
+    "09" : {
+      "description" : "Tomatoes, capsicum and pesto",
+      "discount" : "0",
+      "image" : "http://medifoods.my/images/menu/20_margherita_pizza.jpg",
+      "menuid" : "04",
+      "name" : "MARGHERITA PIZZA",
+      "price" : "700"
+    },
+    "10" : {
+      "description" : "Pasta tossed with capsicum, tofu, soybean chunks and special herb-infused olive oil",
+      "discount" : "0",
+      "image" : "http://medifoods.my/images/menu/15_garden_aglio_olio.jpg",
+      "menuid" : "05",
+      "name" : "GARDEN AGLIO OLIO",
+      "price" : "400"
+    },
+    "11" : {
+      "description" : "Pasta tossed with traditional Asian spices and served with pan fried diced vegetables",
+      "discount" : "0",
+      "image" : "http://medifoods.my/images/menu/17_spicy_aglio_olio.jpg",
+      "menuid" : "05",
+      "name" : "SPICY AGLIO OLIO",
+      "price" : "400"
+    }
+  },
+  "Requests" : {
+    "1534777726562" : {
+      "address" : "for jkjfchug",
+      "foods" : [ {
+        "discount" : "0",
+        "price" : "200",
+        "productID" : "03",
+        "productName" : "Red Bean Pao",
+        "quantity" : "1"
+      } ],
+      "name" : "manish",
+      "phone" : "7289005029",
+      "status" : "0",
+      "total" : "$200.00"
+    },
+    "1534777861758" : {
+      "address" : "ghjgggf hjvh",
+      "foods" : [ {
+        "discount" : "0",
+        "price" : "200",
+        "productID" : "01",
+        "productName" : "Ginger Pao",
+        "quantity" : "1"
+      } ],
+      "name" : "manish",
+      "phone" : "7289005029",
+      "status" : "0",
+      "total" : "$200.00"
+    },
+    "1534777970127" : {
+      "address" : "fgjjj",
+      "foods" : [ {
+        "discount" : "0",
+        "price" : "200",
+        "productID" : "04",
+        "productName" : "CREAM OF MUSHROOM",
+        "quantity" : "1"
+      } ],
+      "name" : "manish",
+      "phone" : "7289005029",
+      "status" : "0",
+      "total" : "$200.00"
+    },
+    "1534778010293" : {
+      "address" : "hrfhyrg ffhj",
+      "foods" : [ {
+        "discount" : "0",
+        "price" : "200",
+        "productID" : "04",
+        "productName" : "CREAM OF MUSHROOM",
+        "quantity" : "1"
+      } ],
+      "name" : "manish",
+      "phone" : "7289005029",
+      "status" : "0",
+      "total" : "$200.00"
+    },
+    "1534787631548" : {
+      "address" : "ghihgfdbjk hhvcgj",
+      "foods" : [ {
+        "discount" : "0",
+        "price" : "200",
+        "productID" : "01",
+        "productName" : "Ginger Pao",
+        "quantity" : "1"
+      } ],
+      "name" : "manish",
+      "phone" : "7289005029",
+      "status" : "0",
+      "total" : "$200.00"
+    },
+    "1534787898270" : {
+      "address" : "fggjhv",
+      "foods" : [ {
+        "discount" : "0",
+        "price" : "200",
+        "productID" : "01",
+        "productName" : "Ginger Pao",
+        "quantity" : "1"
+      }, {
+        "discount" : "0",
+        "price" : "200",
+        "productID" : "02",
+        "productName" : "Coconut pao",
+        "quantity" : "2"
+      } ],
+      "name" : "manish",
+      "phone" : "7289005029",
+      "status" : "0",
+      "total" : "$600.00"
+    },
+    "1534788161569" : {
+      "address" : "",
+      "foods" : [ {
+        "discount" : "0",
+        "price" : "200",
+        "productID" : "04",
+        "productName" : "CREAM OF MUSHROOM",
+        "quantity" : "1"
+      }, {
+        "discount" : "0",
+        "price" : "200",
+        "productID" : "05",
+        "productName" : "CREAM OF PUMPKIN",
+        "quantity" : "1"
+      } ],
+      "name" : "manish",
+      "phone" : "7289005029",
+      "status" : "0",
+      "total" : "$400.00"
+    },
+    "1534788217889" : {
+      "address" : "ghjbvfcb hjbvfc bjkkhv ",
+      "foods" : [ {
+        "discount" : "0",
+        "price" : "200",
+        "productID" : "01",
+        "productName" : "Ginger Pao",
+        "quantity" : "1"
+      } ],
+      "name" : "manish",
+      "phone" : "7289005029",
+      "status" : "0",
+      "total" : "$200.00"
+    }
+  },
+  "User" : {
+    "65979697" : {
+      "email" : "hdisnnxkdjbs",
+      "name" : "kshsbdbx",
+      "password" : "hdudhebshb",
+      "phone" :"65979697",
+      "isstaff" :"false"
+    },
+    "631245798" : {
+      "email" : "pooja@gmail.com",
+      "name" : "pooja",
+      "password" : "12345",
+      "phone" :"631245798",
+      "isstaff" :"false"
+
+    },
+    "9811292339" : {
+      "email" : "jac@2452",
+      "name" : "manish",
+      "password" : "jack",
+      "phone" :"9811292339",
+      "isstaff" :"false"
+    },
+    "68457249675" : {
+      "email" : "kajal@1234",
+      "name" : "kajal",
+      "password" : "5627ye7",
+        "phone" : "68457249675",
+      "isstaff" :"false"
+    },
+    "7289005029" : {
+      "email" : "manish13058@iiitd.ac.in",
+      "name" : "manish",
+      "password" : "jack",
+      "phone" : "7289005029",
+      "isstaff" :"false"
+    },
+    "9868150834" : {
+      "email" : "ujjwalbansal1998@gmail.com",
+      "name" : "Ujjwal",
+      "password" : "123456",
+      "phone" :"9868150834",
+      "isstaff" :"false"
+    },
+    "9953435906" : {
+      "email" : "papagreat@gmail.com",
+      "name" : "papa",
+      "password" : "12345",
+      "phone" :"9953435906",
+      "isstaff" :"true"
     }
   }
 }

@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
-            android:text="Let's Eat Samosa"
+            android:text="Let's order "
             android:textAllCaps="true"
             android:textColor="#FFFFFF"
             android:textSize="24dp"
@@ -47,6 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             app:shadowColor="#000000"
+            app:fButtonColor="@color/colorPrimary"
             app:shadowEnabled="true"
             app:shadowHeight="5dp"
             app:cornerRadius="10dp"/>
@@ -60,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             app:shadowColor="#000000"
-            app:buttonColor="@color/fbutton_color_green_sea"
+            app:fButtonColor="@color/fbutton_color_sun_flower"
             app:shadowEnabled="true"
             app:shadowHeight="5dp"
             app:cornerRadius="10dp"/>
