@@ -45,41 +45,48 @@ public class Signin extends AppCompatActivity {
             @Override
 
             public void onClick(View v) {
-                final ProgressDialog mDialog = new ProgressDialog(Signin.this);
-                mDialog.setMessage("Please Wait..");
-                mDialog.show();
-                user_table.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        //user information
+                if (currentUser.isConnectedToInternet(getBaseContext())) {
+                    final ProgressDialog mDialog = new ProgressDialog(Signin.this);
+                    mDialog.setMessage("Please Wait..");
+                    mDialog.show();
+                    user_table.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            //user information
 
-                        if(dataSnapshot.child(username.getText().toString()).exists()){
-                            mDialog.dismiss();
-                            User user = dataSnapshot.child(username.getText().toString()).getValue(User.class);
-                            if(user.getPassword().equals(password.getText().toString())){
-                                Intent home  = new Intent(Signin.this,Home.class);
-                                currentUser.currentuser = user;
-                                currentUser.number = 4;
-                                System.out.println(currentUser.currentuser.getName());
-                                startActivity(home);
-                                finish();
+                            if (dataSnapshot.child(username.getText().toString()).exists()) {
+                                mDialog.dismiss();
+                                User user = dataSnapshot.child(username.getText().toString()).getValue(User.class);
+                                if (user.getPassword().equals(password.getText().toString())) {
+                                    Intent home = new Intent(Signin.this, Home.class);
+                                    currentUser.currentuser = user;
+                                    currentUser.number = 4;
+                                    System.out.println(currentUser.currentuser.getName());
+                                    startActivity(home);
+                                    finish();
 
 
-                            }else{
-                                Toast.makeText(Signin.this,"sign in failed",Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(Signin.this, "sign in failed", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                mDialog.dismiss();
+                                Toast.makeText(Signin.this, "user not exist", Toast.LENGTH_SHORT).show();
                             }
-                        }else{
-                            mDialog.dismiss();
-                            Toast.makeText(Signin.this,"user not exist",Toast.LENGTH_SHORT).show();
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    }
-                });
+                        }
+                    });
+                }else{
+                    Toast.makeText(Signin.this, "You are not Connected to Internet", Toast.LENGTH_SHORT).show();
+                    return;
+                }
             }
+
+
         });
 
         signup.setOnClickListener(new View.OnClickListener() {

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.dell.oneat.Common.currentUser;
 import com.example.dell.oneat.Model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -55,32 +56,37 @@ public class signup extends AppCompatActivity {
         Signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final ProgressDialog mDialog = new ProgressDialog(signup.this);
-                mDialog.setMessage("Please Wait..");
-                mDialog.show();
-                user_table.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (currentUser.isConnectedToInternet(getBaseContext())) {
+                    final ProgressDialog mDialog = new ProgressDialog(signup.this);
+                    mDialog.setMessage("Please Wait..");
+                    mDialog.show();
+                    user_table.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                        if(dataSnapshot.child(phone.getText().toString()).exists()){
-                            mDialog.dismiss();
-                            Toast.makeText(signup.this,"User Already Exist",Toast.LENGTH_SHORT).show();
-                        }else{
-                            mDialog.dismiss();
-                            User user = new User(Name.getText().toString(),password.getText().toString(),email.getText().toString(),phone.getText().toString());
-                            user_table.child(phone.getText().toString()).setValue(user);
-                            Toast.makeText(signup.this,"Register Successfully...",Toast.LENGTH_SHORT).show();
-                            finish();
+                            if (dataSnapshot.child(phone.getText().toString()).exists()) {
+                                mDialog.dismiss();
+                                Toast.makeText(signup.this, "User Already Exist", Toast.LENGTH_SHORT).show();
+                            } else {
+                                mDialog.dismiss();
+                                User user = new User(Name.getText().toString(), password.getText().toString(), email.getText().toString(), phone.getText().toString());
+                                user_table.child(phone.getText().toString()).setValue(user);
+                                Toast.makeText(signup.this, "Register Successfully...", Toast.LENGTH_SHORT).show();
+                                finish();
+
+                            }
 
                         }
 
-                    }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
+                        }
+                    });
+                } else {
+                    Toast.makeText(signup.this, "You are not Connected to Internet", Toast.LENGTH_SHORT).show();
+                    return;
+                }
             }
         });
 

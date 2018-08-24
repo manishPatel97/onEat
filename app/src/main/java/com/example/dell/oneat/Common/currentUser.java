@@ -1,10 +1,15 @@
 package com.example.dell.oneat.Common;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import com.example.dell.oneat.Model.User;
 
 public class currentUser {
     public static User currentuser;
     public static int number;
+    public static final String DELETE = "Delete";
     public static String convertCodeToStatus(String status){
         if(status.equals("0")){
             return "Placed";
@@ -13,5 +18,19 @@ public class currentUser {
         }else{
             return "Shipped";
         }
+    }
+
+    public static boolean isConnectedToInternet(Context context){
+        ConnectivityManager connectivityManager =(ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(connectivityManager!=null){
+            NetworkInfo []info = connectivityManager.getAllNetworkInfo();
+            if(info!=null){
+                for(int i=0;i<info.length;i++){
+                    if(info[i].getState() == NetworkInfo.State.CONNECTED)
+                        return true;
+                }
+            }
+        }
+        return false;
     }
 }

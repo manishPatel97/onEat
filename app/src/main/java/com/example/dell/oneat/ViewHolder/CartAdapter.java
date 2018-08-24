@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.telecom.TelecomManager;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.example.dell.oneat.Common.currentUser;
 import com.example.dell.oneat.Interface.ItemClickListener;
 import com.example.dell.oneat.Model.Order;
 import com.example.dell.oneat.R;
@@ -22,7 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-class CardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+class CardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
+View.OnCreateContextMenuListener{
 
     public TextView txt_cart_name,txt_price;
     public ImageView img_cart_count;
@@ -37,10 +40,19 @@ class CardViewHolder extends RecyclerView.ViewHolder implements View.OnClickList
         txt_cart_name = itemView.findViewById(R.id.cart_item_name);
         txt_price = itemView.findViewById(R.id.cart_item_price);
         img_cart_count = itemView.findViewById(R.id.cart_item_count);
+        itemView.setOnCreateContextMenuListener(this);
     }
 
     @Override
     public void onClick(View v) {
+
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        menu.setHeaderTitle("Please Select Action");
+        menu.add(0,0,getAdapterPosition(), currentUser.DELETE);
+
 
     }
 }
