@@ -32,7 +32,12 @@
         <activity
             android:name=".Cart"
             android:theme="@style/Theme.AppCompat.Light" />
-        <activity android:name=".OrderStatus"></activity>
+        <activity android:name=".OrderStatus" />
+
+        <service
+            android:name=".Service.ListenOrder"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

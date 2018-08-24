@@ -24,6 +24,7 @@ import com.example.dell.oneat.Common.currentUser;
 import com.example.dell.oneat.Interface.ItemClickListener;
 import com.example.dell.oneat.Model.Category;
 import com.example.dell.oneat.Model.Food;
+import com.example.dell.oneat.Service.ListenOrder;
 import com.example.dell.oneat.ViewHolder.FoodViewHolder;
 import com.example.dell.oneat.ViewHolder.MenuViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -95,6 +96,9 @@ public class Home extends AppCompatActivity
         layoutManager = new LinearLayoutManager(this);
         recycler_menu.setLayoutManager(layoutManager);
         loadMenu();
+        //Register Service
+        Intent service = new Intent(Home.this, ListenOrder.class);
+        startService(service);
 
 
 
@@ -195,6 +199,7 @@ public class Home extends AppCompatActivity
         if (id == R.id.nav_orders) {
             // Handle the camera action
             Intent orderIntent = new Intent(Home.this,OrderStatus.class);
+            orderIntent.putExtra("userphone",currentUser.currentuser.getPhone());
             startActivity(orderIntent);
         } else if (id == R.id.nav_menu) {
 

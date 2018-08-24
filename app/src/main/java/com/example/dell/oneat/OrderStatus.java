@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.dell.oneat.Common.currentUser;
+import com.example.dell.oneat.Interface.ItemClickListener;
 import com.example.dell.oneat.Model.Category;
 import com.example.dell.oneat.Model.Request;
 import com.example.dell.oneat.ViewHolder.FoodViewHolder;
@@ -20,6 +21,8 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+
+import static com.example.dell.oneat.Common.currentUser.convertCodeToStatus;
 
 public class OrderStatus extends AppCompatActivity {
 
@@ -40,7 +43,12 @@ public class OrderStatus extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        loadOrder(currentUser.currentuser.getPhone());
+        if(getIntent()==null){
+            loadOrder(currentUser.currentuser.getPhone());
+        }else{
+            loadOrder(getIntent().getStringExtra("userphone"));
+        }
+
     }
 
     private void loadOrder(String phone) {
@@ -67,8 +75,16 @@ public class OrderStatus extends AppCompatActivity {
                 System.out.println("order phone: "+ model.getPhone() );
                         holder.txtOredr_address.setText(model.getAddress());
                 System.out.println("order address: "+ model.getAddress() );
+                holder.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongClick) {
+
+
+                    }
+                });
             }
         };
+        adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
 
     }
@@ -84,13 +100,5 @@ public class OrderStatus extends AppCompatActivity {
         super.onStop();
         adapter.stopListening();
     }
-    public String convertCodeToStatus(String status){
-        if(status.equals("0")){
-            return "placed";
-        }else if(status.equals("1")){
-            return "On it's way";
-        }else{
-            return "shipped";
-        }
-    }
+
 }
