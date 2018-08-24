@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,6 +21,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import io.paperdb.Paper;
+
 public class Signin extends AppCompatActivity {
 
  TextView signup;
@@ -27,6 +30,8 @@ public class Signin extends AppCompatActivity {
  EditText username,password;
  TextView forgotpassword;
  ImageView back;
+ com.rey.material.widget.CheckBox ckbRemember;
+ //CheckBox ckbRemember;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +43,9 @@ public class Signin extends AppCompatActivity {
         password = findViewById(R.id.password);
         forgotpassword = findViewById(R.id.forgot_password);
         back = findViewById(R.id.back);
+        ckbRemember =  findViewById(R.id.chkboxRemember);
+        //init paper
+        Paper.init(this);
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference user_table = database.getReference("User");
 
@@ -46,6 +54,15 @@ public class Signin extends AppCompatActivity {
 
             public void onClick(View v) {
                 if (currentUser.isConnectedToInternet(getBaseContext())) {
+
+                    if(ckbRemember.isChecked()){
+                        Paper.book().write(currentUser.USER_KEY,username.getText().toString());
+                        Paper.book().write(currentUser.PWD_KEY,password.getText().toString());
+
+                    }
+
+
+
                     final ProgressDialog mDialog = new ProgressDialog(Signin.this);
                     mDialog.setMessage("Please Wait..");
                     mDialog.show();

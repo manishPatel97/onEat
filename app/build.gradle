@@ -44,5 +44,8 @@ dependencies {
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     implementation 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
     implementation 'com.github.mancj:MaterialSearchBar:0.7.1'
+    implementation 'io.paperdb:paperdb:2.6' //writekey-value to android Memory
+    implementation 'com.github.rey5137:material:1.2.5' //Add material check box
+
 }
 apply plugin: 'com.google.gms.google-services'

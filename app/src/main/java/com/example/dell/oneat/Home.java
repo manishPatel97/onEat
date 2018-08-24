@@ -39,6 +39,8 @@ import android.content.Intent;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.paperdb.Paper;
+
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -56,13 +58,14 @@ public class Home extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
+        Paper.init(this);
 
 
         toolbar.setTitle("Menu");
         setSupportActionBar(toolbar);
         database = FirebaseDatabase.getInstance();
         category = database.getReference("Category");
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -208,6 +211,7 @@ public class Home extends AppCompatActivity
             startActivity(cartIntent);
 
         } else if (id == R.id.nav_logout) {
+            Paper.book().destroy();
             Intent logoutIntent = new Intent(Home.this,Signin.class);
             logoutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(logoutIntent);
