@@ -1,6 +1,7 @@
 package com.example.dell.oneat;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +23,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import io.paperdb.Paper;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class Signin extends AppCompatActivity {
 
@@ -33,9 +36,19 @@ public class Signin extends AppCompatActivity {
  com.rey.material.widget.CheckBox ckbRemember;
  //CheckBox ckbRemember;
 
+
+
+    protected void attachBaseContext(Context newBase) {
+        //apply calligraphy to layout
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/amatic.ttf").setFontAttrId(R.attr.fontPath).build()
+        );
         setContentView(R.layout.activity_signin);
         signup = findViewById(R.id.signup_text);
         signin = findViewById(R.id.signin);

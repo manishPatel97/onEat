@@ -9,16 +9,37 @@ public class Request {
     private String address;
     private String total;
     private String status;
+    private String paymentState;
     private List<Order> foods;
+    private String comment;
     public Request(){}
-    public Request(String name, String phone, String address, String total, List<Order> foods) {
+    public Request(String name, String phone, String address, String total, List<Order> foods,String paymentState) {
         this.name = name;
         this.phone = phone;
         this.address = address;
         this.total = total;
         this.foods = foods;
         this.status = "0";
+        this.paymentState = paymentState;
+        //this.comment = comment;
 
+    }
+
+  /*  public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+*/
+
+    public String getPaymentState() {
+        return paymentState;
+    }
+
+    public void setPaymentState(String paymentState) {
+        this.paymentState = paymentState;
     }
 
     public String getStatus() {

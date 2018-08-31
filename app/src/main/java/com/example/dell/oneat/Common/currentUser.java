@@ -5,6 +5,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.example.dell.oneat.Model.User;
+import com.example.dell.oneat.Remote.APIService;
+import com.example.dell.oneat.Remote.RetrofitClient;
 
 public class currentUser {
     public static User currentuser;
@@ -12,6 +14,12 @@ public class currentUser {
     public static final String DELETE = "Delete";
     public static final String USER_KEY ="User";
     public static final String PWD_KEY = "Password";
+    public static final String FCM_URL ="https://fcm.googleapis.com/";
+
+    public static APIService getFCMService(){
+        return RetrofitClient.getClient(FCM_URL).create(APIService.class);
+    }
+
     public static String convertCodeToStatus(String status){
         if(status.equals("0")){
             return "Placed";

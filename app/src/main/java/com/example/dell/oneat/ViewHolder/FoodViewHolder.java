@@ -10,13 +10,17 @@ import com.example.dell.oneat.R;
 
 public class  FoodViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    public TextView food_name;
-    public ImageView food_img;
+    public TextView food_name,food_price;
+    public ImageView food_img,share_img,cart_img;
     private ItemClickListener itemClickListener;
+
     public FoodViewHolder(View itemView) {
         super(itemView);
         food_name = itemView.findViewById(R.id.food_name);
         food_img = itemView.findViewById(R.id.food_image);
+        share_img = itemView.findViewById(R.id.btn_share);
+        food_price= itemView.findViewById(R.id.food_price);
+        cart_img=  itemView.findViewById(R.id.btn_quick_cart);
         itemView.setOnClickListener(this);
     }
 

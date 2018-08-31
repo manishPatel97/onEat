@@ -8,4 +8,6 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_food_detail">FoodDetail</string>
+    <string name="facebook_api_id">1860665440688687</string>
+    <string name="facebook_login_protocol_name">fb1860665440688687</string>
 </resources>

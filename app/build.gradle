@@ -22,8 +22,14 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:animated-vector-drawable:27.1.1'
+    implementation 'com.android.support:customtabs:27.1.1'
+
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    implementation 'com.google.firebase:firebase-messaging:17.3.0'
+
     testImplementation 'junit:junit:4.12'
+
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.google.firebase:firebase-core:16.0.1'
@@ -46,6 +52,13 @@ dependencies {
     implementation 'com.github.mancj:MaterialSearchBar:0.7.1'
     implementation 'io.paperdb:paperdb:2.6' //writekey-value to android Memory
     implementation 'com.github.rey5137:material:1.2.5' //Add material check box
-
+    implementation 'com.stepstone.apprating:app-rating:2.3.0'// rating Library
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.1.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+    implementation 'com.facebook.android:facebook-share:4.35.0'//Facebook sharelib
+    implementation 'com.paypal.sdk:paypal-android-sdk:2.15.3' //paypal sdk integration.
+    implementation 'uk.co.chrisjenx:calligraphy:2.3.0' //calligraphy library to add fonts
+    implementation 'com.github.andremion:counterfab:1.0.1' //add Counterfab button
 }
 apply plugin: 'com.google.gms.google-services'

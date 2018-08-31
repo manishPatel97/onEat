@@ -1,9 +1,11 @@
 package com.example.dell.oneat;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,11 +22,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.andremion.counterfab.CounterFab;
 import com.example.dell.oneat.Common.currentUser;
+import com.example.dell.oneat.Database.Database;
 import com.example.dell.oneat.Interface.ItemClickListener;
 import com.example.dell.oneat.Model.Category;
 import com.example.dell.oneat.Model.Food;
-import com.example.dell.oneat.Service.ListenOrder;
+import com.example.dell.oneat.Model.Token;
+
 import com.example.dell.oneat.ViewHolder.FoodViewHolder;
 import com.example.dell.oneat.ViewHolder.MenuViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -32,6 +37,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.squareup.picasso.Picasso;
 import android.content.Intent;
@@ -40,6 +46,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.paperdb.Paper;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -51,11 +59,23 @@ public class Home extends AppCompatActivity
     RecyclerView recycler_menu;
     RecyclerView.LayoutManager layoutManager;
     FirebaseRecyclerAdapter<Category,MenuViewHolder> adapter;
+    CounterFab fab;
+
+
+    protected void attachBaseContext(Context newBase) {
+        //apply calligraphy to layout
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/amatic.ttf").setFontAttrId(R.attr.fontPath).build()
+        );
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         Paper.init(this);
@@ -67,7 +87,7 @@ public class Home extends AppCompatActivity
         category = database.getReference("Category");
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+         fab = (CounterFab) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,6 +95,7 @@ public class Home extends AppCompatActivity
                 startActivity(cartIntent);
             }
         });
+        fab.setCount(new Database(this).getCountCart());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -96,18 +117,37 @@ public class Home extends AppCompatActivity
         useremail.setText(currentUser.currentuser.getEmail());
         recycler_menu= findViewById(R.id.recyclerView);
         recycler_menu.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
-        recycler_menu.setLayoutManager(layoutManager);
+        //layoutManager = new LinearLayoutManager(this);
+        //recycler_menu.setLayoutManager(layoutManager);
+        recycler_menu.setLayoutManager(new GridLayoutManager(this,2));
+
         loadMenu();
         //Register Service
-        Intent service = new Intent(Home.this, ListenOrder.class);
-        startService(service);
+
+        updateToken(FirebaseInstanceId.getInstance().getToken());
 
 
 
     }
 
+    private void updateToken(String token) {
+        FirebaseDatabase db= FirebaseDatabase.getInstance();
+        DatabaseReference Tokens =db.getReference("Tokens");
+        Token data = new Token(token,false);
+        Tokens.child(currentUser.currentuser.getPhone()).setValue(data);//make userphone number as a key
 
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //adding fab button
+        fab.setCount(new Database(this).getCountCart());
+        if(adapter!=null){
+            adapter.startListening();
+        }
+    }
 
     public void loadMenu(){
         Query query = FirebaseDatabase.getInstance().getReference().child("Category");
