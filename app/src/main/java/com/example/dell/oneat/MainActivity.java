@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/amatic.ttf").setFontAttrId(R.attr.fontPath).build()
+                .setDefaultFontPath("fonts/font1.otf").setFontAttrId(R.attr.fontPath).build()
         );
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_main);
@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }else{
-            Toast.makeText(MainActivity.this, "You are not Connected to Internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "You are not Connected to Internet  please  restart the app.", Toast.LENGTH_SHORT).show();
             return;
         }
     }

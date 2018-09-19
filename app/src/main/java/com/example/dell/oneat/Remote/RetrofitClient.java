@@ -2,10 +2,12 @@ package com.example.dell.oneat.Remote;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class RetrofitClient {
     //create Retrofit Client to send POST HTTP REQUEST
     private  static Retrofit retrofit;
+    private static Retrofit retrofit2;
     public static  Retrofit getClient(String baseURL){
         if(retrofit==null){
             retrofit = new Retrofit.Builder()
@@ -13,5 +15,15 @@ public class RetrofitClient {
 
         }
         return  retrofit;
+    }
+
+
+    public static  Retrofit getGoogleClient(String baseURL){
+        if(retrofit2==null){
+            retrofit2 = new Retrofit.Builder()
+                    .baseUrl(baseURL).addConverterFactory(ScalarsConverterFactory.create()).build();
+
+        }
+        return  retrofit2;
     }
 }

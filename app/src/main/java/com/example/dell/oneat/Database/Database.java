@@ -21,14 +21,16 @@ public class Database extends SQLiteAssetHelper {
     public List<Order> getCarts(){
         SQLiteDatabase db = getReadableDatabase();
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-        String[] sqlSelect = {"ProductName","ProductID","Price","Quantity","Discount"};
+        String[] sqlSelect = {"ID","ProductName","ProductID","Price","Quantity","Discount"};
         String sqltable= "OrderDetail";
         qb.setTables(sqltable);
         Cursor c = qb.query(db,sqlSelect,null,null,null,null,null);
         final  List<Order> result = new ArrayList<>();
         if(c.moveToFirst()){
             do {
-                result.add(new Order(c.getString(c.getColumnIndex("ProductID")),
+                result.add(new Order(
+                        c.getInt(c.getColumnIndex("ID")),
+                        c.getString(c.getColumnIndex("ProductID")),
                         c.getString(c.getColumnIndex("ProductName")),
                         c.getString(c.getColumnIndex("Price")),
                         c.getString(c.getColumnIndex("Quantity")),
@@ -64,5 +66,11 @@ public class Database extends SQLiteAssetHelper {
 
         }
         return count;
+    }
+
+    public void updateCart(Order order) {
+        SQLiteDatabase db = getReadableDatabase();
+        String Query = String.format("UPDATE OrderDetail SET Quantity = %s WHERE ID=%d",order.getQuantity(),order.getID());
+        db.execSQL(Query);
     }
 }

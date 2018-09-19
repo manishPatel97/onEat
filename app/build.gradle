@@ -60,5 +60,8 @@ dependencies {
     implementation 'com.paypal.sdk:paypal-android-sdk:2.15.3' //paypal sdk integration.
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0' //calligraphy library to add fonts
     implementation 'com.github.andremion:counterfab:1.0.1' //add Counterfab button
+    implementation 'com.google.android.gms:play-services-places:15.0.1'
+    implementation 'com.google.android.gms:play-services-location:15.0.1'
+
 }
 apply plugin: 'com.google.gms.google-services'

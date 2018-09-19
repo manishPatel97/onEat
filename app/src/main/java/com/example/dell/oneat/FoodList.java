@@ -103,7 +103,7 @@ public class FoodList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/amatic.ttf").setFontAttrId(R.attr.fontPath).build()
+                .setDefaultFontPath("fonts/font1.otf").setFontAttrId(R.attr.fontPath).build()
         );
         setContentView(R.layout.activity_food_list);
         //init Facebook

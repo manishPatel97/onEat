@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 
 import com.example.dell.oneat.Model.User;
 import com.example.dell.oneat.Remote.APIService;
+import com.example.dell.oneat.Remote.IGoogleService;
 import com.example.dell.oneat.Remote.RetrofitClient;
 
 public class currentUser {
@@ -15,9 +16,15 @@ public class currentUser {
     public static final String USER_KEY ="User";
     public static final String PWD_KEY = "Password";
     public static final String FCM_URL ="https://fcm.googleapis.com/";
+    public static final String GOOGLE_MAPS_URL ="https://maps.googleapis.com/";
+
 
     public static APIService getFCMService(){
         return RetrofitClient.getClient(FCM_URL).create(APIService.class);
+    }
+
+    public static IGoogleService getGoogleMapsService(){
+        return RetrofitClient.getGoogleClient(GOOGLE_MAPS_URL).create(IGoogleService.class);
     }
 
     public static String convertCodeToStatus(String status){

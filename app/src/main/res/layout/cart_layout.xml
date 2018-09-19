@@ -37,12 +37,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:id="@+id/cart_item_count"
-            android:layout_gravity="center_vertical|end"
-            android:layout_marginLeft="16dp"/>
+        <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+            android:id="@+id/btn_quantity"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            app:backGroundColor="@color/fbutton_color_green_sea"
+            app:finalNumber="20"
+            app:initialNumber="1"
+            app:textSize="5sp"/>
 
     </LinearLayout>
 

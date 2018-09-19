@@ -2,7 +2,18 @@ package com.example.dell.oneat.Model;
 
 public class Order {
     private String ProductID,ProductName,Quantity,Price,Discount;
+    private int ID;
+
     public Order(){}
+
+    public Order(int ID, String productID, String productName,  String price,String quantity, String discount) {
+        ProductID = productID;
+        ProductName = productName;
+        Quantity = quantity;
+        Price = price;
+        Discount = discount;
+        this.ID = ID;
+    }
 
     public Order(String productID, String productName, String price, String quantity, String discount) {
         ProductID = productID;
@@ -10,6 +21,14 @@ public class Order {
         Quantity = quantity;
         Price = price;
         Discount = discount;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
     }
 
     public String getProductID() {

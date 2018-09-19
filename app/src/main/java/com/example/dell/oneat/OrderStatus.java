@@ -49,7 +49,7 @@ public class OrderStatus extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/amatic.ttf").setFontAttrId(R.attr.fontPath).build()
+                .setDefaultFontPath("fonts/font1.otf").setFontAttrId(R.attr.fontPath).build()
         );
         setContentView(R.layout.activity_order_status);
         database = FirebaseDatabase.getInstance();

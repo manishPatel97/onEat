@@ -1,20 +1,31 @@
 package com.example.dell.oneat;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,8 +38,19 @@ import com.example.dell.oneat.Model.Sender;
 import com.example.dell.oneat.Model.Token;
 import com.example.dell.oneat.Model.myResponses;
 import com.example.dell.oneat.Remote.APIService;
+import com.example.dell.oneat.Remote.IGoogleService;
 import com.example.dell.oneat.ViewHolder.CartAdapter;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.common.internal.service.Common;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,6 +62,7 @@ import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -56,24 +79,46 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import android.content.Intent;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Cart extends AppCompatActivity {
-    private static final int PAYPAL_REQUEST_CODE = 9999;
+public class Cart extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener,LocationListener{
+    //Layout
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
+
+    //Database
     FirebaseDatabase database;
     DatabaseReference requests;
-    TextView txtTotalPrice;
+
+    //Client Location
+    private LocationRequest mLocationRequest;
+    private Location mLastLocation;
+    private GoogleApiClient mGoogleApiClient;
+    private static final int UPDATE_INTERVAL = 5000;
+    private static final int FAST_INTERVAL = 3000;
+    private static final int DISPLACEMENT = 10;
+    private static final int LOCATION_REQUEST_CODE=9999;
+    private static final int PLAY_SERVICE_REQUUEST=9997;
+    //Client Location
+
+    public TextView txtTotalPrice;
     FButton   btnplace;
     List<Order> orders = new ArrayList<>();
     CartAdapter adapter;
     APIService mService;
+   //Paypal
+    Place shippingAddress;
     static PayPalConfiguration configur = new PayPalConfiguration()
             .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
             .clientId(config.PAYPAL_CLIENT_ID);
+    private static final int PAYPAL_REQUEST_CODE = 9999;
     String Address;
+
+    //Declare Google API service
+    IGoogleService mGoogleMapsService;
+
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -81,16 +126,38 @@ public class Cart extends AppCompatActivity {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //apply calligraphy or fonts to layout.
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                                .setDefaultFontPath("fonts/amatic.ttf").setFontAttrId(R.attr.fontPath).build()
+                                .setDefaultFontPath("fonts/font1.otf").setFontAttrId(R.attr.fontPath).build()
         );
-        System.out.println("cart 1");
+        //GPS Permission
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED
+          && ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION)!= PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this,new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION
+            },LOCATION_REQUEST_CODE);
+        }else{
+            if(checkPlayService()){
+                buildGoogleApiClient();
+                createLocationRequest();
+
+            }
+        }
+
+        //finish
+
+
+        //init Google Api Maps
+        mGoogleMapsService = currentUser.getGoogleMapsService();
+
+        //System.out.println("cart 1");
         setContentView(R.layout.activity_cart);//error in this line
-        System.out.println("cart 2");
+        //System.out.println("cart 2");
         //init Paypal
         Intent intent = new Intent(this, PayPalService.class);
         intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION,configur);
@@ -124,25 +191,145 @@ public class Cart extends AppCompatActivity {
         loadlistfood();
     }
 
+
+    private boolean checkPlayService() {
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if(resultCode != ConnectionResult.SUCCESS){
+            if(GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this, PLAY_SERVICE_REQUUEST).show();
+            }else{
+                Toast.makeText(this, "This Device not Supported!!", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
+
+    private synchronized void buildGoogleApiClient(){
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API).build();
+        mGoogleApiClient.connect();
+    }
+
+
+    private void createLocationRequest(){
+
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(UPDATE_INTERVAL);
+        mLocationRequest.setFastestInterval(FAST_INTERVAL);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setSmallestDisplacement(DISPLACEMENT);
+
+    }
+
+
     private void showAlertDialog() {
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Cart.this);
         alertDialog.setTitle("One More Step!");
         alertDialog.setMessage("Enter your Address: ");
-        final EditText editAddress = new EditText(Cart.this);
-        LinearLayout.LayoutParams lp= new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
-        );
-        editAddress.setLayoutParams(lp);
-        alertDialog.setView(editAddress);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View order_address=inflater.inflate(R.layout.order_address_component,null);
+
+
+
+        //final MaterialEditText editAddress = order_address.findViewById(R.id.edtAddress);
+        final PlaceAutocompleteFragment editAddress = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.address_autocomplete_fragment);
+
+        //Hide Search icon before fragment
+        editAddress.getView().findViewById(R.id.place_autocomplete_search_button).setVisibility(View.GONE);
+
+        //Set Hint for Autocomplete Edit Text
+        ( (EditText)editAddress.getView().findViewById(R.id.place_autocomplete_search_input)).setHint("Enter your Address");
+
+        //Set Text Size
+        ((EditText)editAddress.getView().findViewById(R.id.place_autocomplete_search_input)).setTextSize(14);
+
+
+        editAddress.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                    shippingAddress = place;
+            }
+
+            @Override
+            public void onError(Status status) {
+                Log.e("Error",status.getStatusMessage());
+            }
+        });
+
+
+        //Radio Button
+        final RadioButton shipToThisAddress = order_address.findViewById(R.id.radioShipToAddress);
+        final RadioButton shipToHome = order_address.findViewById(R.id.radioShipToHome);
+
+        shipToThisAddress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    mGoogleMapsService.getHomeAddressName(String.format("https://maps.googleapis.com/maps/api/geocode/json?latlng=%f,%f&sensor=false",mLastLocation.getLatitude(),mLastLocation.getLongitude()))
+                            .enqueue(new Callback<String>() {
+                                @Override
+                                public void onResponse(Call<String> call, Response<String> response) {
+                                    //if fetch API is OK
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(response.body().toString());
+                                        JSONArray resultsArray = jsonObject.getJSONArray("results");
+                                        JSONObject firstObject = resultsArray.getJSONObject(0);
+                                        Address = firstObject.getString("formatted_address");
+                                        ((EditText)editAddress.getView().findViewById(R.id.place_autocomplete_search_input)).setText(Address);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<String> call, Throwable t) {
+                                    Toast.makeText(Cart.this, ""+t.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
+            }
+        });
+
+
+
+
+        alertDialog.setView(order_address);
         alertDialog.setIcon(R.drawable.ic_shopping_cart_black_24dp);
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
+                if(!shipToHome.isChecked() && ! shipToThisAddress.isChecked()){
+                    if(shippingAddress!=null){
+                        Address = shippingAddress.getAddress().toString();
+                    }
+                   else{
+                        Toast.makeText(Cart.this, "Please Enter Address or Select option", Toast.LENGTH_SHORT).show();
+
+                        //Fix Crash Fragment
+                        getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(R.id.address_autocomplete_fragment)).commit();
+                        return;
+                    }
+                }
+
+                if(TextUtils.isEmpty(Address)){
+                    Toast.makeText(Cart.this, "Please Enter Address or Select option", Toast.LENGTH_SHORT).show();
+
+                    //Fix Crash Fragment
+                    getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(R.id.address_autocomplete_fragment)).commit();
+                    return;
+                }
+
+
+
                 //show paypal to  payment
-                Address = editAddress.getText().toString();
+
                 String formatAccount = txtTotalPrice.getText().toString().replace("$","").replace(",","");
                 PayPalPayment payPalPayment = new PayPalPayment(new BigDecimal(formatAccount),"USD","On Eat App Order",PayPalPayment.PAYMENT_INTENT_SALE);
                 Intent intent = new Intent(getApplicationContext(), PaymentActivity.class);
@@ -161,6 +348,7 @@ public class Cart extends AppCompatActivity {
                 //Toast.makeText(Cart.this,"Thank you for placing order",Toast.LENGTH_SHORT).show();
                 //finish();
                 sendNotificationOrder(order_number);*/
+                getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(R.id.address_autocomplete_fragment)).commit();
 
             }
         });
@@ -174,6 +362,7 @@ public class Cart extends AppCompatActivity {
 
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == PAYPAL_REQUEST_CODE){
@@ -186,9 +375,12 @@ public class Cart extends AppCompatActivity {
 
                         Request request = new Request(
                                 currentUser.currentuser.getName(),
-                                currentUser.currentuser.getPhone(),Address,
-                                txtTotalPrice.getText().toString(),orders,
-                                jsonObject.getJSONObject("response").getString("state")
+                                currentUser.currentuser.getPhone(),
+                                Address,
+                                txtTotalPrice.getText().toString(),
+                                orders,
+                                jsonObject.getJSONObject("response").getString("state"),
+                                String.format("%s,%s",shippingAddress.getLatLng().latitude,shippingAddress.getLatLng().longitude)
 
                         );
                         String order_number = String.valueOf(System.currentTimeMillis());
@@ -212,6 +404,7 @@ public class Cart extends AppCompatActivity {
             }
         }
     }
+
 
     private void sendNotificationOrder(final String order_number) {
 
@@ -262,6 +455,7 @@ public class Cart extends AppCompatActivity {
         });
     }
 
+
     private void loadlistfood() {
         orders = new Database(this).getCarts();
         adapter =new CartAdapter(orders,this);
@@ -277,6 +471,7 @@ public class Cart extends AppCompatActivity {
 
     }
 
+
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         if(item.getTitle().equals(currentUser.DELETE)){
@@ -286,6 +481,7 @@ public class Cart extends AppCompatActivity {
         return true;
 
     }
+
 
     private void DeleteCart(int position) {
         orders.remove(position);
@@ -298,4 +494,78 @@ public class Cart extends AppCompatActivity {
         //Refresh after Delete Cart
         loadlistfood();
     }
+
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        displayLocation();
+        startLocationUpdate();
+    }
+
+
+    private void displayLocation() {
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION)!= PackageManager.PERMISSION_GRANTED)
+        {
+            return;
+        }
+        mLastLocation =LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if(mLastLocation!=null){
+            Log.d("LOCATION","Your Location"+mLastLocation.getLatitude()+" "+mLastLocation.getLongitude());
+        }else{
+            Log.d("LOCATION","ERROR: Your Location is not found");
+        }
+    }
+
+
+    private void startLocationUpdate(){
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION)!= PackageManager.PERMISSION_GRANTED)
+        {
+            return;
+        }
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,mLocationRequest,this);
+
+    }
+
+
+    @Override
+    public void onConnectionSuspended(int i) {
+            mGoogleApiClient.connect();//Connect again to GoggleAPIClient
+    }
+
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+
+    @Override
+    public void onLocationChanged(Location location) {
+        mLastLocation = location;
+        displayLocation();
+
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case LOCATION_REQUEST_CODE:
+            {
+                if(grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
+                    if(checkPlayService()){
+                        buildGoogleApiClient();
+                        createLocationRequest();
+
+                    }
+                }
+            }
+            break;
+        }
+    }
+
+
 }
